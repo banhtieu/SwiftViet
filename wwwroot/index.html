@@ -1,8 +1,26 @@
-<html>
+<html ng-app="SwiftVietApplication">
 <head>
 	<title>SwiftTalk Website</title>
+
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-resource.min.js"></script>
+    
+    <script src="Scripts/angular-loader.js"></script>
+    <script src="Scripts/services.js"></script>
+    <script src="Scripts/controllers.js"></script>
+    <script src="Scripts/application.js"></script>
 </head>
-<body>
+<body ng-controller="MenuController">
 	I want to test if deployment works!!
+    <div class="menu" >
+        <span ng-repeat="item in menuItems">
+            {{ item }}
+        </span>
+
+        {{ controllerName }}
+        {{ 1 + 2 }}
+    </div>
 </body>
 </html>
