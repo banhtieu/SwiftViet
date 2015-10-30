@@ -27,6 +27,15 @@ module.exports = function (grunt) {
                 "options": {
                     "livereload": true
                 }
+            },
+            "typescript": {
+                "files": ["**/*.ts"],
+                "tasks": ["shell:tsc"]
+            }
+        },
+        "shell": {
+            "tsc": {
+                command: "tsc"
             }
         }
     });
@@ -34,6 +43,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-bower-task");
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-contrib-sass");
+    grunt.loadNpmTasks("grunt-shell");
 
 
 };

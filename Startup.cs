@@ -1,6 +1,7 @@
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Framework.DependencyInjection;
+using Microsoft.AspNet.StaticFiles;
 
 namespace SwiftTalkAPI
 {
@@ -24,7 +25,10 @@ namespace SwiftTalkAPI
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             // Configure the HTTP request pipeline.
-            app.UseDefaultFiles(new Microsoft.AspNet.StaticFiles.DefaultFilesOptions() { DefaultFileNames = new[] { "index.html" } });
+            app.UseDefaultFiles(new DefaultFilesOptions() 
+                { 
+                    DefaultFileNames = new[] { "index.html" } 
+                });
             app.UseStaticFiles();            
             app.UseMvc();
         }

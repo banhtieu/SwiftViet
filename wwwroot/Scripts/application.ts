@@ -10,7 +10,7 @@ class SwiftVietApplication extends Module {
     public facebookId($resource) {
         return "AAA"
     }
-
+    
 }
 
 var application = new SwiftVietApplication()
