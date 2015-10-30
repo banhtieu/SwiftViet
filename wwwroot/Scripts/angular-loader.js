@@ -1,9 +1,12 @@
-/// <reference path="../lib/angularjs/angular.d.ts" />
-/// <reference path="../lib/angularjs/angular-resource.d.ts" />
-/// <reference path="../lib/angularjs/angular-animate.d.ts" />
-/// <reference path="../lib/angularjs/angular-route.d.ts" />
-/// <reference path="../lib/angularjs/angular-sanitize.d.ts" />
+/// <reference path="../Library/angularjs/angular.d.ts" />
+/// <reference path="../Library/angularjs/angular-resource.d.ts" />
+/// <reference path="../Library/angularjs/angular-animate.d.ts" />
+/// <reference path="../Library/angularjs/angular-route.d.ts" />
+/// <reference path="../Library/angularjs/angular-sanitize.d.ts" />
+
+
 window["Controller"] = function () { };
+
 var FactoryDefinition = (function () {
     /// initilize a Factory Definition object
     function FactoryDefinition(name, dependencies, method) {
@@ -13,6 +16,7 @@ var FactoryDefinition = (function () {
     }
     return FactoryDefinition;
 })();
+
 /// base class for all application
 var Module = (function () {
     /// name of the constructor
