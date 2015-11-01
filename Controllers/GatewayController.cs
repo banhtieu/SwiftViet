@@ -1,0 +1,151 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using Microsoft.AspNet.Mvc;
+using Newtonsoft.Json;
+
+namespace SwiftTalkAPI.Controllers {
+	
+	public class InvokeData {
+		
+		/// Name of the controller
+		public string Name {get; set;}
+		
+		/// the method name
+		public string Method {get; set;}
+		
+		/// list of ObjectData
+		public Dictionary<string, object> ObjectData {get; set;}
+		
+		/// dynamic object parameters
+		public object[] Parameters {get; set;}
+	}
+	
+	
+	[Route("scripts/angular")]
+	public class GatewayController: Controller {
+	
+	
+		/// Get the controller type
+		private Type GetControllerType(string name) {
+			var typeName = "SwiftTalkAPI.Angular." + name;
+			return Type.GetType(typeName, false);
+		}
+		///
+		/// Get controller script name
+		///
+		[Route("{name}.js")]
+		public string GetControllerScript(string name) {
+			var definition = new StringBuilder();
+			
+			try {
+			
+				var type = GetControllerType(name);
+				
+				var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+				var propertiesName = from propertyInfo in properties select propertyInfo.Name; 
+
+				var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance);
+				var methodNames = from methodInfo in methods select methodInfo.Name;
+				
+				definition.AppendFormat("var {0} = (function (_super) {{\n", name);	
+				definition.AppendFormat("  __extends({0}, _super);\n", name);
+				definition.AppendFormat("  function {0}() {{\n", name);
+				definition.AppendFormat("    _super.apply(this, arguments);\n");
+				definition.AppendFormat("    this.properties = ['{0}']\n", string.Join("', '", propertiesName));
+				
+				foreach (var methodName in methodNames) {	
+					definition.AppendFormat("    this.{0} = RemoteController.getRemoteMethod('{0}');\n", methodName);
+				}
+				
+				definition.Append("  }\n");
+				
+				definition.AppendFormat("  {0} = __decorate([\n", name);
+				definition.AppendFormat("    controller('{0}')\n", name);
+				definition.AppendFormat("  ], {0});\n", name);
+				definition.AppendFormat("  return {0};\n", name);
+				definition.Append("})(RemoteController);\n");
+				
+				definition.AppendFormat("application.registerController(new {0}());\n", name);
+				
+			} catch (Exception e) {
+				Console.WriteLine(e.Message);
+				Console.WriteLine(e.StackTrace);
+			}
+			
+			return definition.ToString();
+		}
+		
+		
+		///
+		/// invoke a method
+		[Route("invoke")]
+		[HttpPost]
+		public Dictionary<string, object> Invoke([FromBody] InvokeData data) {
+			
+			var type = GetControllerType(data.Name);
+			
+			Dictionary<string, object> result = null;
+			
+			try {	
+				var requestedMethod = type.GetMethod(data.Method);
+				var instance = Activator.CreateInstance(type);
+				
+				SetObjectData(instance, data.ObjectData);
+				
+				requestedMethod.Invoke(instance, data.Parameters);
+				
+				var afterData = Serialize(instance); 	
+				
+				result = new Dictionary<string, object>() {
+					{"ok", true},
+					{"data", afterData}
+				};
+				
+			} catch (Exception exception){
+				result = new Dictionary<string, object>() {
+					{"ok", false},
+					{"message", exception.Message},
+					{"trace", exception.StackTrace},
+				};
+			}
+			
+			return result;
+		}
+		
+		///
+		/// Set Object Data
+		private void SetObjectData(object instance, Dictionary<string, object> objectData) {
+			
+			var type = instance.GetType();
+			
+			foreach (var element in objectData) {
+				var propertyName = element.Key;
+				var propertyInfo = type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
+				
+				if (propertyInfo != null) {
+					var jsonData = JsonConvert.SerializeObject(element.Value);
+					
+					var value = JsonConvert.DeserializeObject(jsonData, propertyInfo.PropertyType);
+				
+					propertyInfo.SetValue(instance, value);
+				}
+			}
+		}
+		
+		/// Serialize the object into variables
+		private Dictionary<string, object> Serialize(object instance) {
+			var result = new Dictionary<string, object>();
+			var type = instance.GetType();
+			var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+			
+			foreach (var objectProperty in properties) {
+				result.Add(objectProperty.Name, objectProperty.GetValue(instance));
+			}
+			
+			return result;
+		}
+	} 
+}

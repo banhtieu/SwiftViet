@@ -1,0 +1,1 @@
+{"version":3,"file":"sw-button.js","sourceRoot":"","sources":["sw-button.ts"],"names":["Button","Button.constructor"],"mappings":"AAAA,qDAAqD;;;;;;;;;;;;;;AAErD;IACqBA,0BAASA;IAD9BA;QACqBC,8BAASA;IAK9BA,CAACA;IAHAD;QAACA,QAAQA;OACTA,yBAAKA,EAAQA;IAJdA;QAFAA,qDAAqDA;QAEpDA,SAASA,CAACA,UAAUA,EAAEA,gBAAgBA,CAACA;eAMvCA;IAADA,aAACA;AAADA,CAACA,AAND,EACqB,SAAS,EAK7B"}

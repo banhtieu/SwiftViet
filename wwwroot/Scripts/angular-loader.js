@@ -4,6 +4,7 @@
 /// <reference path="../Library/angularjs/angular-route.d.ts" />
 /// <reference path="../Library/angularjs/angular-sanitize.d.ts" />
 window["Controller"] = function () { };
+window["Component"] = function () { };
 var FactoryDefinition = (function () {
     /// initilize a Factory Definition object
     function FactoryDefinition(name, dependencies, method) {
@@ -58,6 +59,28 @@ var Module = (function () {
         });
         this.module.controller(controller.controllerName, description);
     };
+    /// register the component 
+    Module.prototype.registerComponent = function (component) {
+        var scopeDescription = {};
+        if (component.properties) {
+            for (var i = 0; i < component.properties.length; i++) {
+                var property = component.properties[i];
+                scopeDescription[property] = "=" + property;
+            }
+        }
+        this.module.directive(component.name, [function () {
+                return {
+                    restrict: 'E',
+                    scope: scopeDescription,
+                    link: function ($scope) {
+                        // copy properties
+                        for (var property in component) {
+                            $scope[property] = component[property];
+                        }
+                    }
+                };
+            }]);
+    };
     return Module;
 })();
 /// @controller
@@ -86,6 +109,21 @@ function required(modules) {
     return function (target) {
         target.prototype.requiredModules = modules;
     };
+}
+/// @component a component
+function component(name, templateUrl) {
+    return function (target) {
+        target.prototype.name = name;
+        target.prototype.templateUrl = templateUrl;
+    };
+}
+/// @property decorator 
+function property(target, propertyKey) {
+    var component = target;
+    if (component.properties === undefined) {
+        component.properties = [];
+    }
+    component.properties.push(propertyKey);
 }
 /// @factory in an application
 function factory(name, dependencies) {

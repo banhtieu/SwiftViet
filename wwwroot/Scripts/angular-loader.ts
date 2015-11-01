@@ -4,7 +4,13 @@
 /// <reference path="../Library/angularjs/angular-route.d.ts" />
 /// <reference path="../Library/angularjs/angular-sanitize.d.ts" />
 
-window["Controller"] = function () { };
+window["Controller"] = function () { }
+window["Component"] = function () { };
+
+/// generic constructor of a type
+interface Initor<T> {
+    new (...args: any[]): T
+}
 
 /// base class for all controller
 declare class Controller implements ng.IScope {
@@ -89,6 +95,21 @@ declare class Controller implements ng.IScope {
     // Hidden members
     $$isolateBindings: any
     $$phase: any
+}
+
+/// the component class
+declare class Component {
+    
+    name: string
+    
+    // the template URL
+    templateUrl: string
+    
+    // list of property
+    properties: string[]
+    
+    
+    
 }
 
 
@@ -183,6 +204,33 @@ class Module {
         
         this.module.controller(controller.controllerName, description)
     }
+    
+    
+    /// register the component 
+    public registerComponent(component: Component) {
+        
+        var scopeDescription = {}
+        
+        if (component.properties) {
+            for (var i = 0; i < component.properties.length; i++) {
+                var property = component.properties[i];
+                scopeDescription[property] = "=" + property;
+            }
+        }
+        
+        this.module.directive(component.name, [function(){
+            return {
+                restrict: 'E',
+                scope: scopeDescription,
+                link: function($scope: ng.IScope) {
+                    // copy properties
+                    for (var property in component) {
+                        $scope[property] = component[property]
+                    }
+                }
+            }
+        }])
+    }
 }
 
 
@@ -219,6 +267,25 @@ function required(modules: string[]) {
     return function (target: Function) {
         target.prototype.requiredModules = modules
     }
+}
+
+/// @component a component
+function component(name: string, templateUrl: string) {
+    return function(target: Function) {
+        target.prototype.name = name
+        target.prototype.templateUrl = templateUrl
+    }
+}
+
+/// @property decorator 
+function property(target: any, propertyKey: string) {
+    var component = target as Component
+    
+    if (component.properties === undefined) {
+        component.properties = []
+    }
+    
+    component.properties.push(propertyKey)
 }
 
 /// @factory in an application

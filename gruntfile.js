@@ -14,7 +14,7 @@ module.exports = function (grunt) {
                     {
                         "expand": true,
                         "src": ["wwwroot/Styles/*.scss"],
-                        "dest": "wwwroot/Styles", // or "<%= src %>" for output to the same (source) folder
+                        "dest": "<%= src %>", // or "<%= src %>" for output to the same (source) folder
                         "ext": ".css"
                     }
                 ]
