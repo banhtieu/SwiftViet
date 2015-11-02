@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using Microsoft.AspNet.Mvc;
 using Newtonsoft.Json;
+using Microsoft.Framework.DependencyInjection;
 
 namespace SwiftTalkAPI.Controllers {
 	
@@ -27,6 +28,19 @@ namespace SwiftTalkAPI.Controllers {
 	[Route("scripts/angular")]
 	public class GatewayController: Controller {
 	
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private IServiceProvider ServiceProvider { get; set; }
+
+        /// <summary>
+        /// Gateway controller
+        /// </summary>
+        public GatewayController(IServiceProvider serviceProvider)
+        {
+            ServiceProvider = serviceProvider;
+        }
 	
 		/// Get the controller type
 		private Type GetControllerType(string name) {
@@ -93,9 +107,10 @@ namespace SwiftTalkAPI.Controllers {
 			
 			try {	
 				var requestedMethod = type.GetMethod(data.Method);
-				var instance = Activator.CreateInstance(type);
-				
-				SetObjectData(instance, data.ObjectData);
+                var instance = CreateInstance(type);
+
+                SetObjectData(instance, data.ObjectData);
+
 				var parameters = GetParameters(data.Parameters, requestedMethod);
 				
 				requestedMethod.Invoke(instance, parameters);
@@ -118,6 +133,34 @@ namespace SwiftTalkAPI.Controllers {
 			return result;
 		}
 
+
+        /// <summary>
+        /// Create an Instance of Object
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private object CreateInstance(Type type)
+        {
+            var constructor = type.GetConstructors().FirstOrDefault();
+            var constructorParameters = constructor.GetParameters();
+
+            var injectedServices = new object[constructorParameters.Length];
+
+            for (var i = 0; i < injectedServices.Length; i++)
+            {
+                var constructorParameter = constructorParameters[i];
+                injectedServices[i] = ServiceProvider.GetService(constructorParameter.ParameterType);
+            }
+
+            return Activator.CreateInstance(type, injectedServices);
+        }
+
+        /// <summary>
+        /// Get Parameter type
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <param name="requestedMethod"></param>
+        /// <returns></returns>
         private object[] GetParameters(object[] parameters, MethodInfo requestedMethod)
         {
             var result = new object[parameters.Length];

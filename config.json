@@ -1,0 +1,5 @@
+﻿{
+  "Data": {
+    "MongoConnection": "mongodb://swiftviet:abc123@ds045614.mongolab.com:45614/swiftviet"
+  }
+}

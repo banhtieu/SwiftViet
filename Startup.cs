@@ -2,23 +2,41 @@ using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.AspNet.StaticFiles;
+using Microsoft.Framework.Configuration;
+using Microsoft.Dnx.Runtime;
 
 namespace SwiftTalkAPI
 {
     public class Startup
     {
+
+
+        /// <summary>
+        /// The Configuration
+        /// </summary>
+        public IConfiguration Configuration { get; set; }
+
+        /// <summary>
         /// Start up the application
-        /// <param name="service">the environment
-        public Startup(IHostingEnvironment env)
+        /// </summary>
+        /// <param name="env"></param>
+        public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
+            var builder = new ConfigurationBuilder(appEnv.ApplicationBasePath)
+                    .AddJsonFile("config.json");
+
+            builder.AddEnvironmentVariables();
+            Configuration = builder.Build();
         }
 
-        ///
-        /// Configure services for the application
-        /// <param name="services">the list of services</param>
+        /// <summary>
+        /// Configure Dependencies Injection
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddInstance(Configuration);
         }
 
         // Configure is called after ConfigureServices is called.
