@@ -44,7 +44,9 @@ namespace SwiftTalkAPI.Controllers {
 			
 				var type = GetControllerType(name);
 				
-				var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+				var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+									.Where(propertyInfo => propertyInfo.CanWrite);
+									
 				var propertiesName = from propertyInfo in properties select propertyInfo.Name; 
 
 				var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance);
@@ -94,8 +96,9 @@ namespace SwiftTalkAPI.Controllers {
 				var instance = Activator.CreateInstance(type);
 				
 				SetObjectData(instance, data.ObjectData);
+				var parameters = GetParameters(data.Parameters, requestedMethod);
 				
-				requestedMethod.Invoke(instance, data.Parameters);
+				requestedMethod.Invoke(instance, parameters);
 				
 				var afterData = Serialize(instance); 	
 				
@@ -114,10 +117,36 @@ namespace SwiftTalkAPI.Controllers {
 			
 			return result;
 		}
-		
-		///
-		/// Set Object Data
-		private void SetObjectData(object instance, Dictionary<string, object> objectData) {
+
+        private object[] GetParameters(object[] parameters, MethodInfo requestedMethod)
+        {
+            var result = new object[parameters.Length];
+			var parameterInfos = requestedMethod.GetParameters();
+			
+			for (var i = 0; i < parameterInfos.Length; i++) {
+				var parameterInfo = parameterInfos[i];
+				var parameter = parameters[i];
+				
+				result[i] = ConvertType(parameter, parameterInfo.ParameterType);
+			}
+			
+			return result;
+        }
+
+		/// convert an object to target type
+        private object ConvertType(object parameter, Type parameterType)
+        {
+			var jsonData = JsonConvert.SerializeObject(parameter);
+			return JsonConvert.DeserializeObject(jsonData, parameterType);
+
+        }
+
+
+
+        ///
+        /// Set Object Data
+		/// <parameter name="instance">The instance<parameter>
+        private void SetObjectData(object instance, Dictionary<string, object> objectData) {
 			
 			var type = instance.GetType();
 			
@@ -125,10 +154,8 @@ namespace SwiftTalkAPI.Controllers {
 				var propertyName = element.Key;
 				var propertyInfo = type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
 				
-				if (propertyInfo != null) {
-					var jsonData = JsonConvert.SerializeObject(element.Value);
-					
-					var value = JsonConvert.DeserializeObject(jsonData, propertyInfo.PropertyType);
+				if (propertyInfo != null && propertyInfo.CanWrite) {
+					var value = ConvertType(element.Value, propertyInfo.PropertyType);
 				
 					propertyInfo.SetValue(instance, value);
 				}
@@ -139,7 +166,8 @@ namespace SwiftTalkAPI.Controllers {
 		private Dictionary<string, object> Serialize(object instance) {
 			var result = new Dictionary<string, object>();
 			var type = instance.GetType();
-			var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+			var properties = type.GetProperties(BindingFlags.Public 
+								| BindingFlags.Instance);
 			
 			foreach (var objectProperty in properties) {
 				result.Add(objectProperty.Name, objectProperty.GetValue(instance));
