@@ -18,18 +18,10 @@ var SwiftVietApplication = (function (_super) {
     function SwiftVietApplication() {
         _super.apply(this, arguments);
     }
-    /// the factory
-    SwiftVietApplication.prototype.facebookId = function ($resource) {
-        return "AAA";
-    };
-    Object.defineProperty(SwiftVietApplication.prototype, "facebookId",
-        __decorate([
-            factory()
-        ], SwiftVietApplication.prototype, "facebookId", Object.getOwnPropertyDescriptor(SwiftVietApplication.prototype, "facebookId")));
     SwiftVietApplication = __decorate([
         /// <reference path="./angular-loader.ts" />
         module("SwiftVietApplication"),
-        required(["ngResource", "controllers"])
+        required(["ngResource", "controllers", "ngMaterial"])
     ], SwiftVietApplication);
     return SwiftVietApplication;
 })(Module);

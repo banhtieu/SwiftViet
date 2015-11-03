@@ -2,14 +2,8 @@
 
 /// the sample application
 @module("SwiftVietApplication")
-@required(["ngResource", "controllers"])
+@required(["ngResource", "controllers", "ngMaterial"])
 class SwiftVietApplication extends Module {
-
-    /// the factory
-    @factory()
-    public facebookId($resource) {
-        return "AAA"
-    }
     
 }
 

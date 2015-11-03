@@ -7,7 +7,7 @@ using Microsoft.AspNet.Mvc;
 using Newtonsoft.Json;
 using Microsoft.Framework.DependencyInjection;
 
-namespace SwiftTalkAPI.Controllers {
+namespace SwiftViet.Controllers {
 	
 	public class InvokeData {
 		
@@ -44,7 +44,7 @@ namespace SwiftTalkAPI.Controllers {
 	
 		/// Get the controller type
 		private Type GetControllerType(string name) {
-			var typeName = "SwiftTalkAPI.Angular." + name;
+			var typeName = "SwiftViet.Angular." + name;
 			return Type.GetType(typeName, false);
 		}
 		///

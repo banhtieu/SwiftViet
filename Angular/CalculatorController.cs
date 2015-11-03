@@ -1,9 +1,9 @@
-namespace SwiftTalkAPI.Angular {
+namespace SwiftViet.Angular {
 	
 	
 	///
 	/// a sample angular controller
-	class CalculatorController {
+	public class CalculatorController {
 		
 		/// Name 
 		public int A { get; set; }
@@ -14,9 +14,15 @@ namespace SwiftTalkAPI.Angular {
 		
 		
 		/// add the two integer
-		public void Add() {
+		public void Add()
+        {
 			Result = A + B;
 		}
+
+        public void Sub()
+        {
+            Result = A - B;
+        }
 		
 	}
 	

@@ -5,7 +5,7 @@ using Microsoft.AspNet.StaticFiles;
 using Microsoft.Framework.Configuration;
 using Microsoft.Dnx.Runtime;
 
-namespace SwiftTalkAPI
+namespace SwiftViet
 {
     public class Startup
     {

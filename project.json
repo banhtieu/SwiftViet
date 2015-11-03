@@ -11,7 +11,8 @@
         "MongoDB.Driver": "2.0.1",
         "MongoDB.Driver.Core": "2.0.1",
         "MongoDB.Bson": "2.0.1",
-        "Microsoft.Framework.Configuration.Json": "1.0.0-beta6"
+        "Microsoft.Framework.Configuration.Json": "1.0.0-beta6",
+        "Octokit": "0.16.0"
     },
 
     "commands": {

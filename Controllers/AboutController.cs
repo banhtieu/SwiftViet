@@ -1,6 +1,6 @@
 using Microsoft.AspNet.Mvc;
 
-namespace SwiftTalkAPI.Controllers {
+namespace SwiftViet.Controllers {
 	
 	
 	
