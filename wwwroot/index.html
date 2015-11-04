@@ -14,7 +14,7 @@
 
     <!-- Angular Material Javascript using GitCDN to load directly from `bower-material/master` -->
     <script src="https://gitcdn.xyz/repo/angular/bower-material/master/angular-material.js"></script>
-
+    <script src="scripts/effect.js"></script>
     <script src="scripts/angular-loader.js"></script>
     <script src="scripts/services.js"></script>
     <script src="scripts/controllers.js"></script>
@@ -22,16 +22,32 @@
     <script src="scripts/remote-controller.js"></script>
     <script src="scripts/angular/HomePageController.js"></script>
 </head>
-<body ng-controller="HomePageController">
-    <div class="container" flex ng-cloak>
+<body ng-cloak>
+
+    <div ng-controller="HomePageController" class="container" flex>
         <md-grid-list md-cols-sm="1" md-cols-md="2" md-cols-gt-md="4"
                       md-row-height="4:3"
                       md-gutter="8px" md-gutter-gt-sm="4px">
-            <md-grid-tile ng-repeat="video in Videos"
-                          ng-class="tile.background">
-                <img style="width: 100%" ng-src="http://img.youtube.com/vi/{{ video.Code }}/0.jpg" />
+            <md-grid-tile ng-repeat="video in Videos">
+                <div class="video">
+                    <img ng-src="http://img.youtube.com/vi/{{ video.Code }}/0.jpg" />
+                    <div class='shine'>&nbsp;</div>
+                    <div class='title'>
+                        Hello
+                    </div>
+                </div>
             </md-grid-tile>
         </md-grid-list>
+
+        <div class="video">
+            <img ng-src="http://img.youtube.com/vi/qVTHoXRrhq4/0.jpg" />
+            <div class='shine'>&nbsp;</div>
+            <div class='title'>
+                Hello
+            </div>
+        </div>
     </div>
+
+    
 </body>
 </html>

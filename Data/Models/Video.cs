@@ -15,7 +15,6 @@ namespace SwiftViet.Data.Models
         /// </summary>
         public ObjectId Id { get; set; }
 
-
         /// <summary>
         /// Video Title
         /// </summary>
@@ -26,5 +25,10 @@ namespace SwiftViet.Data.Models
         /// Code of the video
         /// </summary>
         public string Code { get; set; }
+
+        /// <summary>
+        /// Description of the video
+        /// </summary>
+        public string Description { get; internal set; }
     }
 }

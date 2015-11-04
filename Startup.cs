@@ -5,6 +5,11 @@ using Microsoft.AspNet.StaticFiles;
 using Microsoft.Framework.Configuration;
 using Microsoft.Dnx.Runtime;
 
+using System;
+using Google.Apis.YouTube.v3;
+using Google.Apis.Services;
+using Google.Apis.Auth.OAuth2;
+
 namespace SwiftViet
 {
     public class Startup
@@ -37,6 +42,26 @@ namespace SwiftViet
         {
             services.AddMvc();
             services.AddInstance(Configuration);
+
+            // initialize youtube service
+            services.AddTransient(CreateYoutubeService);
+        }
+
+
+        /// <summary>
+        /// Create a Youtube Service with ApiKey
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public YouTubeService CreateYoutubeService(IServiceProvider services)
+        {
+
+            var service = new YouTubeService(new BaseClientService.Initializer()
+            {
+                ApiKey = Configuration["Data:GoogleAPIKey"]
+            });
+
+            return service;
         }
 
         // Configure is called after ConfigureServices is called.

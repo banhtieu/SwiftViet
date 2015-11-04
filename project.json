@@ -12,7 +12,8 @@
         "MongoDB.Driver.Core": "2.0.1",
         "MongoDB.Bson": "2.0.1",
         "Microsoft.Framework.Configuration.Json": "1.0.0-beta6",
-        "Octokit": "0.16.0"
+        "Octokit": "0.16.0",
+        "Google.Apis.YouTube.v3": "1.9.2.1500"
     },
 
     "commands": {
