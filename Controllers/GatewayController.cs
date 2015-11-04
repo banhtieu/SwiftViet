@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Text;
 using Microsoft.AspNet.Mvc;
 using Newtonsoft.Json;
-using Microsoft.Framework.DependencyInjection;
 
 namespace SwiftViet.Controllers {
 	
