@@ -1,4 +1,5 @@
 ﻿using SwiftViet.Data.Models;
+using SwiftViet.Data.Repository;
 using System.Collections.Generic;
 
 namespace SwiftViet.Angular
@@ -16,43 +17,34 @@ namespace SwiftViet.Angular
         public List<Video> Videos { get; set; }
 
         /// <summary>
+        /// The video repository
+        /// </summary>
+        private IRepository<Video> videoRepository;
+
+
+        /// <summary>
+        /// The home page controller constructor
+        /// </summary>
+        /// <param name="videoRepository"></param>
+        public HomePageController(IRepository<Video> videoRepository)
+        {
+            this.videoRepository = videoRepository;
+        }
+
+        /// <summary>
         /// Run when page is loaded
         /// </summary>
         public void OnLoad()
         {
-            Videos = new List<Video>()
+            var video = new Video()
             {
-                new Video
-                {
-                    Title = "S-White Street Drummer",
-                    Code = "qVTHoXRrhq4",
-                },
-                new Video
-                {
-                    Title = "S-White Street Drummer",
-                    Code = "qVTHoXRrhq4",
-                },
-                new Video
-                {
-                    Title = "S-White Street Drummer",
-                    Code = "qVTHoXRrhq4",
-                },
-                new Video
-                {
-                    Title = "S-White Street Drummer",
-                    Code = "qVTHoXRrhq4",
-                },
-                new Video
-                {
-                    Title = "S-White Street Drummer",
-                    Code = "qVTHoXRrhq4",
-                },
-                new Video
-                {
-                    Title = "S-White Street Drummer",
-                    Code = "qVTHoXRrhq4",
-                },
+                Title = "S-White Street Drummer",
+                Code = "qVTHoXRrhq4"
             };
+
+            videoRepository.Save(video);
+
+            Videos = videoRepository.FindAll();
         }
     }
 }

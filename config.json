@@ -1,6 +1,7 @@
 ﻿{
   "Data": {
     "MongoConnection": "mongodb://swiftviet:abc123@ds045614.mongolab.com:45614/swiftviet",
+    "MongoDBName": "swiftviet",
     "GoogleAPIKey": "AIzaSyCQxooyaZG8SXOLvEIPDxrA5moY_ZPAmUI"
   }
 }

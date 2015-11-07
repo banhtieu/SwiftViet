@@ -7,13 +7,8 @@ namespace SwiftViet.Data.Models
     /// <summary>
     /// The Youtube Video
     /// </summary>
-    public class Video
+    public class Video: Entity
     {
-
-        /// <summary>
-        /// The Object Id
-        /// </summary>
-        public ObjectId Id { get; set; }
 
         /// <summary>
         /// Video Title

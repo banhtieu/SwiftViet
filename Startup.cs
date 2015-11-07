@@ -9,6 +9,10 @@ using System;
 using Google.Apis.YouTube.v3;
 using Google.Apis.Services;
 using Google.Apis.Auth.OAuth2;
+using MongoDB.Driver;
+using SwiftViet.Data.Models;
+using SwiftViet.Data.Repository;
+using SwiftViet.Data.Repository.Mongo;
 
 namespace SwiftViet
 {
@@ -45,8 +49,24 @@ namespace SwiftViet
 
             // initialize youtube service
             services.AddTransient(CreateYoutubeService);
+            services.AddInstance(GetMongoDatabase());
+
+            services.AddTransient<IRepository<Video>>(
+                provider => new MongoRepository<Video>(provider.GetService<IMongoDatabase>())
+            );
         }
 
+
+        /// <summary>
+        /// Get the mongodatabase
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public IMongoDatabase GetMongoDatabase()
+        {
+            var mongoClient = new MongoClient(Configuration["Data:MongoConnection"]);
+            return mongoClient.GetDatabase(Configuration["Data:MongoDBName"]);
+        }
 
         /// <summary>
         /// Create a Youtube Service with ApiKey
